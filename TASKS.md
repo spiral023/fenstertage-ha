@@ -28,3 +28,7 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 - [x] 14. year-Modus — der interaktive Jahresurlaubsplaner
 - [x] 15. CI-Workflows, Dependabot, README
 - [x] 16. Gesamtsuite, Coverage-Gate, Abschluss-Validierung
+
+## Zusatzaufgaben
+
+- [x] App-Icon für Fenstertage (Kalender, Brücke und Alpenraum) erstellt und visuell geprüft.
