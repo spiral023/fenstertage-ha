@@ -1,22 +1,32 @@
 import { css } from "lit";
 
 /**
- * Effizienz-Farbrampe: neutral (niedrig) → kräftiges Teal (hoch).
- * Bewusst keine Ampel — Effizienz ist kein Alarm, sondern eine Güte.
- * Werte via color-mix aus der Theme-Primärfarbe abgeleitet, damit die
- * Karte in jedem Theme (hell/dunkel) stimmig bleibt.
+ * Effizienz-Farbrampe: helles Blau (niedrig) → kräftiges Blau (hoch).
+ * Bleibt in der Fenstertag-Blaufamilie des Originals statt der
+ * Theme-Primärfarbe zu folgen — die Kartenfarben sollen als Marke
+ * wiedererkennbar sein, unabhängig vom gewählten HA-Theme.
  */
 export function efficiencyColor(eff: number): string {
   // eff ist praktisch 1.0 … 4.0+; auf 0..1 normieren.
   const t = Math.max(0, Math.min(1, (eff - 1) / 3));
-  const pct = Math.round(25 + t * 75); // 25 % … 100 % Primärfarbanteil
-  return `color-mix(in srgb, var(--primary-color) ${pct}%, var(--secondary-text-color) ${100 - pct}%)`;
+  const pct = Math.round(35 + t * 65); // 35 % … 100 % kräftiges Blau
+  return `color-mix(in srgb, var(--fen-blue-deep) ${pct}%, var(--fen-blue-light) ${100 - pct}%)`;
 }
 
 export const cardStyles = css`
   :host {
     --fen-radius: 10px;
     --fen-transition: 180ms ease;
+
+    /* Markenfarben — bewusst fix statt vom HA-Theme abgeleitet, damit
+       Feiertag/Fenstertag/Urlaub/Heute wie auf fenstertage.com immer
+       dieselbe Bedeutung tragen, gleich in welchem Dashboard-Theme. */
+    --fen-red: #ef4444;
+    --fen-blue-deep: #1d4ed8;
+    --fen-blue-light: #93c5fd;
+    --fen-blue: #3b82f6;
+    --fen-green: #22c55e;
+    --fen-amber: #f59e0b;
   }
   ha-card {
     padding: 16px;
@@ -248,34 +258,46 @@ export const cardStyles = css`
   }
   .months {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 16px;
+  }
+  .month {
+    background: color-mix(in srgb, var(--primary-text-color) 4%, var(--card-background-color));
+    border: 1px solid var(--divider-color);
+    border-radius: 12px;
+    padding: 12px;
   }
   .month-name {
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-bottom: 4px;
-    text-transform: capitalize;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    color: var(--secondary-text-color);
   }
   .month-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
+    gap: 2px;
   }
   .wd {
-    font-size: 0.6rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     text-align: center;
+    padding-bottom: 4px;
   }
   .day {
     font: inherit;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-variant-numeric: tabular-nums;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
-    border-radius: 6px;
+    border-radius: 999px;
     background: transparent;
     color: var(--primary-text-color);
     cursor: pointer;
@@ -292,41 +314,46 @@ export const cardStyles = css`
     color: var(--secondary-text-color);
   }
   .day.past {
-    opacity: 0.35;
+    opacity: 0.65;
     cursor: default;
   }
   .day.holiday {
-    background: color-mix(in srgb, var(--primary-color) 18%, transparent);
+    background: var(--fen-red);
+    color: #fff;
     font-weight: 700;
     cursor: default;
   }
   .day.range {
     box-shadow: inset 0 0 0 1px
-      color-mix(in srgb, var(--primary-color) 35%, transparent);
+      color-mix(in srgb, var(--fen-blue) 45%, transparent);
   }
   .day.block {
     background: var(--fen-day-color);
-    color: var(--text-primary-color, #fff);
+    color: #fff;
     font-weight: 700;
   }
   .day.is-planned {
-    background: var(--primary-color);
-    color: var(--text-primary-color, #fff);
+    background: var(--fen-green);
+    color: #fff;
     font-weight: 700;
-    box-shadow: inset 0 0 0 2px var(--card-background-color);
   }
   .day.selected {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid var(--fen-blue);
     outline-offset: 1px;
   }
   .day.today {
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    box-shadow: inset 0 0 0 2px var(--fen-amber);
+  }
+  .day.today:not(.holiday):not(.block):not(.is-planned) {
+    background: var(--fen-amber);
+    color: #221503;
+    font-weight: 700;
   }
   .legend {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
-    margin-top: 12px;
+    margin-top: 14px;
   }
   .legend .dot {
     display: inline-block;
@@ -335,14 +362,20 @@ export const cardStyles = css`
     border-radius: 50%;
     margin-right: 5px;
   }
-  .legend .block-dot {
-    background: var(--primary-color);
-    opacity: 0.75;
-  }
   .legend .holiday-dot {
-    background: color-mix(in srgb, var(--primary-color) 25%, transparent);
+    background: var(--fen-red);
+  }
+  .legend .block-dot {
+    background: var(--fen-blue);
   }
   .legend .planned-dot {
-    background: var(--primary-color);
+    background: var(--fen-green);
+  }
+  .legend .weekend-dot {
+    background: var(--secondary-text-color);
+    opacity: 0.5;
+  }
+  .legend .today-dot {
+    background: var(--fen-amber);
   }
 `;

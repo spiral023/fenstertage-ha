@@ -79,10 +79,13 @@ function monthName(ctx: CardCtx, year: number, month: number): string {
 
 function weekdayInitials(ctx: CardCtx): string[] {
   const lang = ctx.hass.locale?.language ?? "en";
-  // 2024-01-01 war ein Montag.
+  // 2024-01-01 war ein Montag. Zweistellig statt "narrow" — im
+  // Deutschen sind Mo/Di/Mi/Do sonst nicht unterscheidbar.
   return Array.from({ length: 7 }, (_, i) =>
     new Date(2024, 0, 1 + i)
-      .toLocaleDateString(lang, { weekday: "narrow" }),
+      .toLocaleDateString(lang, { weekday: "short" })
+      .replace(/[^\p{L}]/gu, "")
+      .slice(0, 2),
   );
 }
 
@@ -225,9 +228,11 @@ export function renderYear(
       )}
     </div>
     <div class="legend muted small">
-      <span><i class="dot block-dot"></i>Fenstertag</span>
       <span><i class="dot holiday-dot"></i>${ctx.t("holidays")}</span>
-      <span><i class="dot planned-dot"></i>${ctx.t("planned")}</span>
+      <span><i class="dot block-dot"></i>${ctx.t("bridge_day")}</span>
+      <span><i class="dot planned-dot"></i>${ctx.t("vacation")}</span>
+      <span><i class="dot weekend-dot"></i>${ctx.t("weekend")}</span>
+      <span><i class="dot today-dot"></i>${ctx.t("today")}</span>
     </div>
   `;
 }
