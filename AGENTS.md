@@ -16,6 +16,38 @@ Zulässige Typen sind mindestens `feat`, `fix`, `test`, `docs`, `ci`, `chore`
 und `refactor`; Beispiele: `feat: Urlaubsplanung hinzufügen` oder
 `docs: Übersetzungsstrategie präzisieren`.
 
+## Releases
+
+Nach jeder für Nutzer sichtbaren Änderung (neues Feature, Karten-Update,
+Bugfix) wird ein echter GitHub Release erstellt — nur so zeigt Home
+Assistant/HACS im Update-Dialog lesbare Versionshinweise statt rohe
+Commit-Hashes an. Kleine interne Aufräumarbeiten ohne Nutzer-Auswirkung
+brauchen keinen eigenen Release.
+
+Ablauf:
+
+1. `custom_components/fenstertage/manifest.json` → `version` erhöhen
+   (SemVer, ohne `v`-Präfix). Hat sich die Karte inhaltlich geändert,
+   zusätzlich `CARD_VERSION` in `const.py` **und** `src/const.ts` synchron
+   mit hochziehen (Cache-Busting) und `npm run build` laufen lassen.
+2. Commit + Push auf `main`.
+3. Git-Tag exakt gleich der `manifest.json`-Version setzen und pushen:
+   `git tag -a X.Y.Z -m "X.Y.Z" && git push origin X.Y.Z`.
+4. GitHub Release erstellen:
+   `gh release create X.Y.Z --title "X.Y.Z — <Kurzbeschreibung>" --notes-file <datei>`.
+   Notizen-Struktur:
+   - Ein einleitender Satz, was das Release aus Nutzersicht bringt.
+   - `## 🎉 Features` — neue, sichtbare Funktionen (Nutzerperspektive, nicht
+     Implementierungsdetails).
+   - `## 🛠 Verbesserungen & Fixes` — Bugfixes, Robustheit, CI.
+   - Nur Abschnitte mit tatsächlichem Inhalt aufnehmen; leere Abschnitte weglassen.
+5. Bekannte HACS-Falle: `async_release_notes()` liefert in HACS' eigenem
+   Update-Entity so lange `None` (leerer Änderungstext im Dialog, ganz ohne
+   Fehlermeldung), wie für die Integration noch ein Neustart aussteht
+   (`pending_restart`). Nach dem Klick auf „Aktualisieren“ muss Home
+   Assistant einmal komplett neu gestartet werden, erst danach zeigt der
+   Dialog die Versionshinweise zuverlässig an.
+
 # Entwicklungskonventionen
 
 ## HACS-Integration
