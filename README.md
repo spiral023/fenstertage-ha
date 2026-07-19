@@ -1,18 +1,54 @@
+<div align="center">
+
+<img src="docs/assets/logo.png" alt="Fenstertage HA" width="168">
+
 # Fenstertage HA
 
+**Feiertage, Werktage und Fenstertage (Brückentage) für 🇦🇹 🇩🇪 🇨🇭 —<br>mit interaktivem Jahresurlaubsplaner direkt in Lovelace.**
+
 [![Validate](https://github.com/spiral023/fenstertage-ha/actions/workflows/validate.yml/badge.svg)](https://github.com/spiral023/fenstertage-ha/actions/workflows/validate.yml)
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Home-Assistant-Integration für [fenstertage.com](https://fenstertage.com):
-Feiertage, Werktags-Statistiken und Fenstertage (Brückentage) für
-Österreich, Deutschland und die Schweiz — inklusive interaktiver
-Lovelace-Karte zur Jahresurlaubsplanung mit Urlaubsbudget.
+</div>
 
-<!-- TODO: Screenshot der Karte im list-Modus -->
-<!-- TODO: Screenshot der Karte im year-Modus -->
+---
 
-## Features
+Diese Integration bringt die Daten von [fenstertage.com](https://fenstertage.com)
+nach Home Assistant: Feiertage, Werktags-Statistiken und die effizientesten
+Brückentage. Dazu kommt eine mitgelieferte Lovelace-Karte, mit der sich Urlaub
+per Klick planen lässt — inklusive Urlaubsbudget und Jahresübersicht, ganz ohne
+Skripte oder Entwicklerwerkzeuge.
 
-### Sensoren
+## Inhalt
+
+- [Highlights](#highlights)
+- [Sensoren](#sensoren)
+- [Urlaubsplanung per Service](#urlaubsplanung-per-service)
+- [Lovelace-Karte](#lovelace-karte)
+- [Installation](#installation)
+- [Konfiguration](#konfiguration)
+- [Datenquelle & Update-Verhalten](#datenquelle--update-verhalten)
+- [Entfernen](#entfernen)
+- [Bekannte Grenzen](#bekannte-grenzen)
+- [Troubleshooting](#troubleshooting)
+- [Lizenz](#lizenz)
+
+## Highlights
+
+- **Ein Klick, ein Urlaubsblock.** Die effizientesten Brückentage werden
+  vorgeschlagen und lassen sich direkt aus der Karte einplanen.
+- **Interaktiver Jahresplaner** mit Monatsraster, Feiertagen, Vorschlägen und
+  eigener Freihand-Auswahl.
+- **Urlaubsbudget im Blick** — pro Jahr konfigurierbar, live gegengerechnet.
+- **AT, DE (16 Bundesländer) und CH (26 Kantone)** oder jeweils landesweit.
+- **Sparsam & sauber**: genau ein API-Call pro Jahr, `DataUpdateCoordinator`,
+  Diagnostics, vollständige Übersetzungen und mypy-strict-Typisierung.
+
+<!-- TODO: Screenshot der Karte im year-Modus einfügen (docs/assets/) -->
+<!-- TODO: Screenshot der Karte im list-Modus einfügen (docs/assets/) -->
+
+## Sensoren
 
 Pro konfiguriertem Land/Region-Entry werden fünf Sensoren und zwei
 Binary-Sensoren angelegt (Entity-IDs am Beispiel `AT`):
@@ -27,11 +63,11 @@ Binary-Sensoren angelegt (Entity-IDs am Beispiel `AT`):
 | `binary_sensor.fenstertage_at_holiday_today` | An, wenn heute ein Feiertag ist | `holiday_name` |
 | `binary_sensor.fenstertage_at_bridge_day_today` | An, wenn heute innerhalb eines freien Zeitraums eines Fenstertage-Blocks liegt | `block` |
 
-Die kartenrelevanten Attribute (`block`, `blocks`, `years`,
-`planned_items`) sind vom Recorder ausgeschlossen — sie sind zu groß und
-zu volatil für die Historie.
+Die kartenrelevanten Attribute (`block`, `blocks`, `years`, `planned_items`)
+sind vom Recorder ausgeschlossen — sie sind zu groß und zu volatil für die
+Historie.
 
-### Urlaubsplanung per Service
+## Urlaubsplanung per Service
 
 Vier Services verwalten die persistierte Urlaubsplanung eines Entries:
 
@@ -62,11 +98,12 @@ automation:
           block_id: "{{ state_attr('sensor.fenstertage_at_best_bridge_day', 'block').block_id }}"
 ```
 
-### Lovelace-Karte
+## Lovelace-Karte
 
 Die Karte `custom:fenstertage-card` zeigt Fenstertage, Feiertage und den
 Urlaubsstatus direkt im Dashboard und plant Urlaub per Klick — ganz ohne
-Skripte oder Entwicklerwerkzeuge.
+Skripte oder Entwicklerwerkzeuge. Bei Installation über HACS wird die
+Ressource automatisch registriert.
 
 | Option | Typ | Default | Beschreibung |
 | --- | --- | --- | --- |
@@ -76,8 +113,20 @@ Skripte oder Entwicklerwerkzeuge.
 | `show_budget` | boolean | `true` | Budget-Balken einblenden |
 | `levels` | number[] | alle | Nur Fenstertage-Blöcke dieser Effizienz-Level anzeigen (1–5) |
 
-**`compact`** — der nächste Fenstertage-Block als kompakte Kachel,
-gedacht für Übersichts-Dashboards:
+<table>
+<tr>
+<th><code>compact</code></th>
+<th><code>list</code></th>
+<th><code>year</code></th>
+</tr>
+<tr>
+<td>Der nächste Fenstertage-Block als kompakte Kachel — ideal für Übersichts-Dashboards.</td>
+<td>Alle kommenden Vorschläge als Liste; ein Klick öffnet den Planen/Entfernen-Dialog.</td>
+<td>Der interaktive Jahresplaner: Monatsraster mit Feiertagen, Vorschlägen und Freihand-Auswahl.</td>
+</tr>
+</table>
+
+**`compact`** — kompakte Kachel für den nächsten Block:
 
 ```yaml
 type: custom:fenstertage-card
@@ -85,8 +134,8 @@ entity: sensor.fenstertage_at_next_bridge_day
 mode: compact
 ```
 
-**`list`** — alle kommenden Vorschläge als Liste, Klick öffnet einen
-Dialog zum Planen/Entfernen:
+**`list`** — alle kommenden Vorschläge als Liste, Klick öffnet einen Dialog
+zum Planen/Entfernen:
 
 ```yaml
 type: custom:fenstertage-card
@@ -107,21 +156,20 @@ title: Urlaubsplaner 2026
 
 Im `year`-Modus gilt: Tap auf einen geplanten Tag öffnet den
 Entfernen-Dialog, Tap auf einen Fenstertage-Vorschlag den
-Planen/Entfernen-Dialog, und zwei Taps auf freie Werktage (Wochenenden
-und Feiertage sind nicht wählbar) spannen einen frei wählbaren
-Urlaubszeitraum auf.
+Planen/Entfernen-Dialog, und zwei Taps auf freie Werktage (Wochenenden und
+Feiertage sind nicht wählbar) spannen einen frei wählbaren Urlaubszeitraum
+auf.
 
-Die Karte lässt sich vollständig über den visuellen Editor
-konfigurieren (Karte hinzufügen → „Fenstertage Card“ auswählen) — eine
-manuelle YAML-Bearbeitung ist nicht nötig.
+Die Karte lässt sich vollständig über den visuellen Editor konfigurieren
+(Karte hinzufügen → „Fenstertage Card“ auswählen) — eine manuelle
+YAML-Bearbeitung ist nicht nötig.
 
 ## Installation
 
 ### Über HACS (empfohlen)
 
 1. HACS → Integrationen → Menü „Benutzerdefinierte Repositories“ →
-   Repository `spiral023/fenstertage-ha`, Kategorie „Integration“
-   hinzufügen.
+   Repository `spiral023/fenstertage-ha`, Kategorie „Integration“ hinzufügen.
 2. „Fenstertage HA“ installieren und Home Assistant neu starten.
 3. Einstellungen → Geräte & Dienste → Integration hinzufügen →
    „Fenstertage“ suchen.
@@ -134,12 +182,12 @@ manuelle YAML-Bearbeitung ist nicht nötig.
 3. Einstellungen → Geräte & Dienste → Integration hinzufügen →
    „Fenstertage“ suchen.
 
-### Konfiguration
+## Konfiguration
 
-Beim Einrichten wird zunächst das Land gewählt (AT, DE, CH); für DE und
-CH kann zusätzlich ein Bundesland/Kanton oder „landesweit“ gewählt
-werden. Jede Land/Region-Kombination erzeugt einen eigenen Config
-Entry mit eigenen Sensoren, eigener Urlaubsplanung und eigenem Budget.
+Beim Einrichten wird zunächst das Land gewählt (AT, DE, CH); für DE und CH
+kann zusätzlich ein Bundesland/Kanton oder „landesweit“ gewählt werden. Jede
+Land/Region-Kombination erzeugt einen eigenen Config Entry mit eigenen
+Sensoren, eigener Urlaubsplanung und eigenem Budget.
 
 Über die Optionen (Einstellungen → Geräte & Dienste → Fenstertage →
 Konfigurieren) lassen sich danach jederzeit anpassen:
@@ -155,25 +203,23 @@ Konfigurieren) lassen sich danach jederzeit anpassen:
 
 Alle Daten stammen von der öffentlichen, unauthentifizierten API
 [fenstertage.com/api/metrics](https://fenstertage.com/api/metrics). Pro
-geladenem Jahr wird genau ein HTTP-Call ausgeführt (aktuelles Jahr plus
-die konfigurierten Vorschau-Jahre), standardmäßig alle 12 Stunden. Ein
-zusätzlicher Mitternachts-Tick ohne API-Call aktualisiert die von
-„heute“ abhängigen Sensoren (z. B. verbleibende Werktage) auch
-zwischen zwei Abfragen. Alle Entities tragen die Attribution „Daten von
-fenstertage.com“.
+geladenem Jahr wird genau ein HTTP-Call ausgeführt (aktuelles Jahr plus die
+konfigurierten Vorschau-Jahre), standardmäßig alle 12 Stunden. Ein
+zusätzlicher Mitternachts-Tick ohne API-Call aktualisiert die von „heute“
+abhängigen Sensoren (z. B. verbleibende Werktage) auch zwischen zwei
+Abfragen. Alle Entities tragen die Attribution „Daten von fenstertage.com“.
 
 ## Entfernen
 
-Wird der Config Entry entfernt, löscht Home Assistant auch die dazu
-gehörige gespeicherte Urlaubsplanung
-(`.storage/fenstertage.<entry_id>`). Die Lovelace-Ressource der Karte
-wird automatisch entfernt, sobald der letzte Fenstertage-Entry gelöscht
-wurde.
+Wird der Config Entry entfernt, löscht Home Assistant auch die dazu gehörige
+gespeicherte Urlaubsplanung (`.storage/fenstertage.<entry_id>`). Die
+Lovelace-Ressource der Karte wird automatisch entfernt, sobald der letzte
+Fenstertage-Entry gelöscht wurde.
 
 ## Bekannte Grenzen
 
-- Urlaubsplanungen sind pro Land/Region-Entry gespeichert — für ein
-  Familien- oder Mehrpersonen-Setup sind mehrere Entries nötig.
+- Urlaubsplanungen sind pro Land/Region-Entry gespeichert — für ein Familien-
+  oder Mehrpersonen-Setup sind mehrere Entries nötig.
 - Frei gewählte Urlaubszeiträume sind auf maximal 60 Tage begrenzt.
 - Es lassen sich nur Zeiträume innerhalb der aktuell geladenen Jahre
   (laufendes Jahr + Vorschau-Jahre) planen.
@@ -181,15 +227,19 @@ wurde.
 ## Troubleshooting
 
 - **Karte erscheint nicht im Card-Picker oder auf dem Dashboard:** Die
-  Lovelace-Ressource wird beim Start automatisch registriert
-  (Storage-Modus). Im YAML-Modus muss sie manuell unter
-  Einstellungen → Dashboards → Ressourcen als
-  `/fenstertage/fenstertage-card.js` (Typ „JavaScript-Modul“)
-  eingetragen werden.
+  Lovelace-Ressource wird beim Start automatisch registriert (Storage-Modus).
+  Im YAML-Modus muss sie manuell unter Einstellungen → Dashboards →
+  Ressourcen als `/fenstertage/fenstertage-card.js` (Typ „JavaScript-Modul“)
+  eingetragen werden. Nach einem Karten-Update ggf. den Browser-Cache mit
+  Strg+Umschalt+R leeren.
 - **`cannot_connect` beim Einrichten:** fenstertage.com ist von diesem
-  Home-Assistant-Host aus nicht erreichbar — Internetverbindung bzw.
-  DNS/Proxy prüfen.
+  Home-Assistant-Host aus nicht erreichbar — Internetverbindung bzw. DNS/Proxy
+  prüfen.
 - **Urlaubstage werden nicht wie erwartet vom Budget abgezogen:** Nur
-  Mo–Fr-Tage ohne Feiertag zählen als Urlaubstag; Wochenenden und
-  Feiertage innerhalb eines geplanten Zeitraums werden automatisch
-  ausgeklammert.
+  Mo–Fr-Tage ohne Feiertag zählen als Urlaubstag; Wochenenden und Feiertage
+  innerhalb eines geplanten Zeitraums werden automatisch ausgeklammert.
+
+## Lizenz
+
+[MIT](LICENSE) © 2026 Philipp Asanger. Daten von
+[fenstertage.com](https://fenstertage.com).
