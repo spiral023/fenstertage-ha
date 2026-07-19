@@ -46,6 +46,9 @@ export class FenstertageCard extends LitElement {
   /** year-Modus: erster Tap einer freien Range. */
   @state() public selStart?: string | undefined;
 
+  /** year-Modus: angezeigtes Jahr (Default: erstes geladenes Jahr). */
+  @state() public activeYear?: string | undefined;
+
   @state() private _dialog?: DialogState | undefined;
 
   static override styles = cardStyles;
@@ -56,6 +59,7 @@ export class FenstertageCard extends LitElement {
     }
     this._config = { mode: "list", show_budget: true, ...config };
     this.selStart = undefined;
+    this.activeYear = undefined;
     this._dialog = undefined;
   }
 

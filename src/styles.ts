@@ -203,4 +203,146 @@ export const cardStyles = css`
     gap: 10px;
     margin-top: 6px;
   }
+
+  /* year-Modus */
+  .year-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .year-head .budget {
+    margin-top: 0;
+    min-width: 180px;
+    flex: 1;
+  }
+  .year-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .year-tab {
+    font: inherit;
+    font-weight: 600;
+    background: transparent;
+    color: var(--secondary-text-color);
+    border: 1px solid var(--divider-color);
+    border-radius: 999px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all var(--fen-transition);
+  }
+  .year-tab.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--text-primary-color, #fff);
+  }
+  .pick-hint {
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+    color: var(--primary-text-color);
+  }
+  .months {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+  .month-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: capitalize;
+  }
+  .month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+  }
+  .wd {
+    font-size: 0.6rem;
+    text-align: center;
+  }
+  .day {
+    font: inherit;
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--primary-text-color);
+    cursor: pointer;
+    padding: 0;
+    transition: background var(--fen-transition), transform var(--fen-transition);
+  }
+  .day:hover {
+    background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  }
+  .day:active {
+    transform: scale(0.96);
+  }
+  .day.weekend {
+    color: var(--secondary-text-color);
+  }
+  .day.past {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .day.holiday {
+    background: color-mix(in srgb, var(--primary-color) 18%, transparent);
+    font-weight: 700;
+    cursor: default;
+  }
+  .day.range {
+    box-shadow: inset 0 0 0 1px
+      color-mix(in srgb, var(--primary-color) 35%, transparent);
+  }
+  .day.block {
+    background: var(--fen-day-color);
+    color: var(--text-primary-color, #fff);
+    font-weight: 700;
+  }
+  .day.is-planned {
+    background: var(--primary-color);
+    color: var(--text-primary-color, #fff);
+    font-weight: 700;
+    box-shadow: inset 0 0 0 2px var(--card-background-color);
+  }
+  .day.selected {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 1px;
+  }
+  .day.today {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .legend .dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  .legend .block-dot {
+    background: var(--primary-color);
+    opacity: 0.75;
+  }
+  .legend .holiday-dot {
+    background: color-mix(in srgb, var(--primary-color) 25%, transparent);
+  }
+  .legend .planned-dot {
+    background: var(--primary-color);
+  }
 `;
