@@ -287,6 +287,50 @@ async def test_load_skips_items_with_invalid_source_or_block_id(
     assert [item.id for item in store.items] == ["bridge"]
 
 
+async def test_load_skips_structurally_invalid_items(hass: HomeAssistant) -> None:
+    store = PlannerStore(hass, "entry_invalid_structure", default_budget=25)
+    valid_item = {
+        "id": "valid",
+        "start": "2026-08-03",
+        "end": "2026-08-04",
+        "vacation_dates": ["2026-08-03", "2026-08-04"],
+        "source": SOURCE_MANUAL,
+        "block_id": None,
+        "created_at": "",
+    }
+    await store._store.async_save(  # noqa: SLF001 — gezielter Whitebox-Test
+        {
+            "budgets": {},
+            "items": [
+                valid_item,
+                {
+                    **valid_item,
+                    "id": "reversed",
+                    "start": "2026-08-05",
+                    "end": "2026-08-04",
+                },
+                {**valid_item, "id": "empty", "vacation_dates": []},
+                {
+                    **valid_item,
+                    "id": "duplicate",
+                    "vacation_dates": ["2026-08-03", "2026-08-03"],
+                },
+                {
+                    **valid_item,
+                    "id": "outside-range",
+                    "vacation_dates": ["2026-08-05"],
+                },
+                {**valid_item, "id": 123},
+                {**valid_item, "id": ""},
+            ],
+        }
+    )
+
+    await store.async_load()
+
+    assert [item.id for item in store.items] == ["valid"]
+
+
 @pytest.mark.parametrize(
     ("source", "block_id"),
     [("other", None), (SOURCE_MANUAL, "2026-08-03_1d")],

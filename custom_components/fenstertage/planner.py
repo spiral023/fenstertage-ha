@@ -70,8 +70,23 @@ def _item_from_dict(raw: Any) -> PlannedItem | None:
     if not isinstance(raw, dict):
         return None
     try:
+        item_id = raw["id"]
+        start = dt.date.fromisoformat(raw["start"])
+        end = dt.date.fromisoformat(raw["end"])
+        dates_raw = raw["vacation_dates"]
         source = raw["source"]
         block_id = raw.get("block_id")
+        if not isinstance(item_id, str) or not item_id:
+            return None
+        if start > end or not isinstance(dates_raw, list):
+            return None
+        vacation_dates = tuple(dt.date.fromisoformat(day) for day in dates_raw)
+        if (
+            not vacation_dates
+            or len(set(vacation_dates)) != len(vacation_dates)
+            or any(day < start or day > end for day in vacation_dates)
+        ):
+            return None
         if source not in (SOURCE_MANUAL, SOURCE_BRIDGE_DAY):
             return None
         if not isinstance(block_id, str | None):
@@ -79,12 +94,10 @@ def _item_from_dict(raw: Any) -> PlannedItem | None:
         if source != SOURCE_BRIDGE_DAY and block_id is not None:
             return None
         return PlannedItem(
-            id=str(raw["id"]),
-            start=dt.date.fromisoformat(raw["start"]),
-            end=dt.date.fromisoformat(raw["end"]),
-            vacation_dates=tuple(
-                dt.date.fromisoformat(d) for d in raw["vacation_dates"]
-            ),
+            id=item_id,
+            start=start,
+            end=end,
+            vacation_dates=vacation_dates,
             source=source,
             block_id=block_id,
             created_at=str(raw.get("created_at") or ""),
