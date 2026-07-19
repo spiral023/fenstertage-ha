@@ -2,7 +2,7 @@ rules:
   # --- Bronze ---
   action-setup: done
   appropriate-polling: done  # 12 h Default, konfigurierbar 1–48 h
-  brands: todo  # PR in home-assistant/brands separat einreichen
+  brands: done  # lokales Brand-Asset unter custom_components/fenstertage/brand/icon.png; PR in home-assistant/brands optional
   common-modules: done  # coordinator.py, entity.py
   config-flow: done
   config-flow-test-coverage: done
