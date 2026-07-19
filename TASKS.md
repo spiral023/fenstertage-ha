@@ -13,7 +13,7 @@ und rät ausdrücklich von `strings.json` ab. Aufgabe 6 verwendet daher
 Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 
 - [x] 1. Repo-Grundgerüst (manifest, hacs.json, const.py, Tooling)
-- [ ] 2. `api.py` — Client, Dataclasses, Exceptions, Mojibake-Fix
+- [x] 2. `api.py` — Client, Dataclasses, Exceptions, Mojibake-Fix
 - [ ] 3. `planner.py` — PlannerStore, Budget, Validierung
 - [ ] 4. `derive.py` — pure Ableitungen + Test-Factories
 - [ ] 5. `coordinator.py` + `__init__.py` + `conftest` — Mehrjahres-Fetch und Entry-Lifecycle
