@@ -21,6 +21,7 @@ from homeassistant.util import dt as dt_util
 from .const import (
     DOMAIN,
     MAX_VACATION_RANGE_DAYS,
+    SOURCE_BRIDGE_DAY,
     SOURCE_MANUAL,
     STORAGE_VERSION,
 )
@@ -69,6 +70,14 @@ def _item_from_dict(raw: Any) -> PlannedItem | None:
     if not isinstance(raw, dict):
         return None
     try:
+        source = raw["source"]
+        block_id = raw.get("block_id")
+        if source not in (SOURCE_MANUAL, SOURCE_BRIDGE_DAY):
+            return None
+        if not isinstance(block_id, str | None):
+            return None
+        if source != SOURCE_BRIDGE_DAY and block_id is not None:
+            return None
         return PlannedItem(
             id=str(raw["id"]),
             start=dt.date.fromisoformat(raw["start"]),
@@ -76,12 +85,26 @@ def _item_from_dict(raw: Any) -> PlannedItem | None:
             vacation_dates=tuple(
                 dt.date.fromisoformat(d) for d in raw["vacation_dates"]
             ),
-            source=str(raw.get("source") or SOURCE_MANUAL),
-            block_id=raw.get("block_id") or None,
+            source=source,
+            block_id=block_id,
             created_at=str(raw.get("created_at") or ""),
         )
     except (KeyError, TypeError, ValueError):
         return None
+
+
+class _PlannerStorage(Store[dict[str, Any]]):
+    """Store with a migration hook for legacy planner data."""
+
+    async def _async_migrate_func(
+        self,
+        old_major_version: int,
+        old_minor_version: int,
+        old_data: Any,
+    ) -> dict[str, Any]:
+        """Keep recoverable legacy mappings and discard unusable payloads."""
+        del old_major_version, old_minor_version
+        return old_data if isinstance(old_data, dict) else {}
 
 
 class PlannerStore:
@@ -90,7 +113,7 @@ class PlannerStore:
     def __init__(
         self, hass: HomeAssistant, entry_id: str, default_budget: int
     ) -> None:
-        self._store: Store[dict[str, Any]] = Store(
+        self._store: _PlannerStorage = _PlannerStorage(
             hass, STORAGE_VERSION, f"{DOMAIN}.{entry_id}"
         )
         self._default_budget = default_budget
@@ -171,6 +194,10 @@ class PlannerStore:
         vacation_dates: tuple[dt.date, ...] | None = None,
     ) -> PlannedItem:
         """Validate + persist one new range. Raises ServiceValidationError."""
+        if source not in (SOURCE_MANUAL, SOURCE_BRIDGE_DAY):
+            raise ValueError(f"unsupported planner source: {source!r}")
+        if source != SOURCE_BRIDGE_DAY and block_id is not None:
+            raise ValueError("only bridge-day items may have a block id")
         if end < start:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
@@ -187,7 +214,7 @@ class PlannerStore:
         self._check_overlap(start, end)
         dates = (
             tuple(vacation_dates)
-            if vacation_dates
+            if vacation_dates is not None
             else compute_vacation_dates(start, end, holidays)
         )
         if not dates:

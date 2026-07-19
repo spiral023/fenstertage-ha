@@ -6,8 +6,14 @@ import datetime as dt
 import pytest
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
+from homeassistant.helpers.storage import Store
 
-from custom_components.fenstertage.const import SOURCE_BRIDGE_DAY, SOURCE_MANUAL
+from custom_components.fenstertage.const import (
+    DOMAIN,
+    SOURCE_BRIDGE_DAY,
+    SOURCE_MANUAL,
+    STORAGE_VERSION,
+)
 from custom_components.fenstertage.planner import (
     PlannerStore,
     compute_vacation_dates,
@@ -66,6 +72,22 @@ async def test_vacation_dates_override_wins(hass: HomeAssistant) -> None:
         vacation_dates=(D(2026, 5, 26), D(2026, 5, 27)),
     )
     assert item.vacation_dates == (D(2026, 5, 26), D(2026, 5, 27))
+
+
+async def test_explicit_empty_vacation_dates_are_rejected(
+    hass: HomeAssistant,
+) -> None:
+    store = PlannerStore(hass, "entry_empty_dates", default_budget=25)
+    await store.async_load()
+
+    with pytest.raises(ServiceValidationError):
+        await store.async_add_item(
+            start=D(2026, 5, 15),
+            end=D(2026, 5, 15),
+            holidays=set(),
+            source=SOURCE_BRIDGE_DAY,
+            vacation_dates=(),
+        )
 
 
 async def test_overlap_rejected(hass: HomeAssistant) -> None:
@@ -177,3 +199,109 @@ async def test_load_ignores_malformed_entries(hass: HomeAssistant) -> None:
     await store.async_load()
     assert len(store.items) == 1
     assert store.budget_for(2026) == 30
+
+
+async def test_load_migrates_legacy_store_version(hass: HomeAssistant) -> None:
+    key = f"{DOMAIN}.entry_legacy"
+    legacy_store: Store[dict[str, object]] = Store(hass, 0, key)
+    await legacy_store.async_save(
+        {
+            "budgets": {"2026": 30},
+            "items": [
+                {
+                    "id": "legacy",
+                    "start": "2026-08-03",
+                    "end": "2026-08-04",
+                    "vacation_dates": ["2026-08-03", "2026-08-04"],
+                    "source": SOURCE_MANUAL,
+                    "block_id": None,
+                    "created_at": "",
+                }
+            ],
+        }
+    )
+
+    store = PlannerStore(hass, "entry_legacy", default_budget=25)
+    await store.async_load()
+
+    assert store.budget_for(2026) == 30
+    assert [item.id for item in store.items] == ["legacy"]
+    current_store: Store[dict[str, object]] = Store(hass, STORAGE_VERSION, key)
+    assert await current_store.async_load() == {
+        "budgets": {"2026": 30},
+        "items": [
+            {
+                "id": "legacy",
+                "start": "2026-08-03",
+                "end": "2026-08-04",
+                "vacation_dates": ["2026-08-03", "2026-08-04"],
+                "source": SOURCE_MANUAL,
+                "block_id": None,
+                "created_at": "",
+            }
+        ],
+    }
+
+
+async def test_load_skips_items_with_invalid_source_or_block_id(
+    hass: HomeAssistant,
+) -> None:
+    store = PlannerStore(hass, "entry_invalid_items", default_budget=25)
+    await store._store.async_save(  # noqa: SLF001 — gezielter Whitebox-Test
+        {
+            "budgets": {},
+            "items": [
+                {
+                    "id": "manual-with-block",
+                    "start": "2026-08-03",
+                    "end": "2026-08-03",
+                    "vacation_dates": ["2026-08-03"],
+                    "source": SOURCE_MANUAL,
+                    "block_id": "2026-08-03_1d",
+                    "created_at": "",
+                },
+                {
+                    "id": "unknown-source",
+                    "start": "2026-08-04",
+                    "end": "2026-08-04",
+                    "vacation_dates": ["2026-08-04"],
+                    "source": "other",
+                    "block_id": None,
+                    "created_at": "",
+                },
+                {
+                    "id": "bridge",
+                    "start": "2026-08-05",
+                    "end": "2026-08-05",
+                    "vacation_dates": ["2026-08-05"],
+                    "source": SOURCE_BRIDGE_DAY,
+                    "block_id": "2026-08-05_1d",
+                    "created_at": "",
+                },
+            ],
+        }
+    )
+
+    await store.async_load()
+
+    assert [item.id for item in store.items] == ["bridge"]
+
+
+@pytest.mark.parametrize(
+    ("source", "block_id"),
+    [("other", None), (SOURCE_MANUAL, "2026-08-03_1d")],
+)
+async def test_add_rejects_invalid_internal_source_combinations(
+    hass: HomeAssistant, source: str, block_id: str | None
+) -> None:
+    store = PlannerStore(hass, "entry_invalid_source", default_budget=25)
+    await store.async_load()
+
+    with pytest.raises(ValueError):
+        await store.async_add_item(
+            start=D(2026, 8, 3),
+            end=D(2026, 8, 3),
+            holidays=set(),
+            source=source,
+            block_id=block_id,
+        )
