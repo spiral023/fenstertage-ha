@@ -1,0 +1,98 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Choose country",
+        "data": {"country": "Country"},
+        "data_description": {"country": "Public holidays and bridge days are calculated for this country."}
+      },
+      "subdivision": {
+        "title": "Choose region",
+        "description": "Some holidays in {country} differ per region. Pick a region or nationwide.",
+        "data": {"subdivision": "Region"}
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach fenstertage.com. Check your internet connection.",
+      "unknown": "Unexpected response from fenstertage.com."
+    },
+    "abort": {"already_configured": "This country/region combination is already configured."}
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Fenstertage options",
+        "data": {
+          "max_level": "Maximum suggestion level (vacation days per block)",
+          "preview_years": "Preview years to preload",
+          "update_interval_hours": "Update interval (hours)",
+          "vacation_budget": "Yearly vacation budget (days)"
+        }
+      }
+    }
+  },
+  "selector": {
+    "country": {"options": {"AT": "Austria", "DE": "Germany", "CH": "Switzerland"}},
+    "subdivision": {"options": {"nationwide": "Nationwide (no region filter)"}}
+  },
+  "entity": {
+    "sensor": {
+      "next_bridge_day": {"name": "Next bridge day"},
+      "best_bridge_day": {"name": "Best bridge day"},
+      "workdays_remaining": {"name": "Workdays remaining"},
+      "holidays_this_year": {"name": "Holidays this year"},
+      "vacation_budget": {"name": "Vacation budget remaining"}
+    },
+    "binary_sensor": {
+      "holiday_today": {"name": "Holiday today"},
+      "bridge_day_today": {"name": "Bridge day today"}
+    }
+  },
+  "services": {
+    "plan_bridge_day": {
+      "name": "Plan bridge day",
+      "description": "Marks one suggested bridge-day block as planned vacation.",
+      "fields": {
+        "config_entry_id": {"name": "Entry", "description": "The Fenstertage entry to plan against."},
+        "block_id": {"name": "Block ID", "description": "The block_id from the sensor attributes."}
+      }
+    },
+    "plan_vacation": {
+      "name": "Plan vacation",
+      "description": "Plans a free date range as vacation. Weekends and holidays are excluded automatically.",
+      "fields": {
+        "config_entry_id": {"name": "Entry", "description": "The Fenstertage entry to plan against."},
+        "start": {"name": "Start", "description": "First day of the range."},
+        "end": {"name": "End", "description": "Last day of the range."}
+      }
+    },
+    "remove_vacation": {
+      "name": "Remove vacation",
+      "description": "Removes one planned vacation item.",
+      "fields": {
+        "config_entry_id": {"name": "Entry", "description": "The Fenstertage entry."},
+        "item_id": {"name": "Item ID", "description": "The id of the planned item."}
+      }
+    },
+    "set_budget": {
+      "name": "Set budget",
+      "description": "Sets the vacation budget for one year.",
+      "fields": {
+        "config_entry_id": {"name": "Entry", "description": "The Fenstertage entry."},
+        "year": {"name": "Year", "description": "Calendar year."},
+        "days": {"name": "Days", "description": "Vacation days available in that year."}
+      }
+    }
+  },
+  "exceptions": {
+    "update_failed": {"message": "Fetching fenstertage.com data for {year} failed: {error}"},
+    "invalid_range": {"message": "End date must not be before start date."},
+    "range_too_long": {"message": "Vacation ranges are limited to {max_days} days."},
+    "overlapping_vacation": {"message": "The range overlaps an existing plan ({start} – {end})."},
+    "no_vacation_days": {"message": "The range contains no workdays — nothing to plan."},
+    "unknown_item": {"message": "No planned vacation with id {item_id}."},
+    "unknown_block": {"message": "No bridge-day block with id {block_id} in the loaded years."},
+    "unknown_entry": {"message": "Unknown or not loaded Fenstertage entry: {entry_id}."},
+    "year_not_loaded": {"message": "No holiday data loaded for {year}. Increase the preview years option."}
+  }
+}

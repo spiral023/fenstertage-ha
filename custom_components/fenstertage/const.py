@@ -47,6 +47,9 @@ SUBDIVISIONS: dict[str, list[str]] = {
     ],
 }
 
+# Dropdown sentinel for a country-wide query without a subdivision filter.
+SUBDIVISION_NATIONWIDE = "nationwide"
+
 SERVICE_PLAN_BRIDGE_DAY = "plan_bridge_day"
 SERVICE_PLAN_VACATION = "plan_vacation"
 SERVICE_REMOVE_VACATION = "remove_vacation"

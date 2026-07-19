@@ -1,0 +1,98 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Land wählen",
+        "data": {"country": "Land"},
+        "data_description": {"country": "Feiertage und Fenstertage werden für dieses Land berechnet."}
+      },
+      "subdivision": {
+        "title": "Region wählen",
+        "description": "Manche Feiertage in {country} gelten nur regional. Wähle eine Region oder landesweit.",
+        "data": {"subdivision": "Region"}
+      }
+    },
+    "error": {
+      "cannot_connect": "fenstertage.com ist nicht erreichbar. Prüfe deine Internetverbindung.",
+      "unknown": "Unerwartete Antwort von fenstertage.com."
+    },
+    "abort": {"already_configured": "Diese Land/Region-Kombination ist bereits eingerichtet."}
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Fenstertage-Optionen",
+        "data": {
+          "max_level": "Maximales Vorschlags-Level (Urlaubstage pro Block)",
+          "preview_years": "Vorschau-Jahre vorladen",
+          "update_interval_hours": "Aktualisierungsintervall (Stunden)",
+          "vacation_budget": "Jahresurlaub (Tage)"
+        }
+      }
+    }
+  },
+  "selector": {
+    "country": {"options": {"AT": "Österreich", "DE": "Deutschland", "CH": "Schweiz"}},
+    "subdivision": {"options": {"nationwide": "Landesweit (kein Regionsfilter)"}}
+  },
+  "entity": {
+    "sensor": {
+      "next_bridge_day": {"name": "Nächster Fenstertag"},
+      "best_bridge_day": {"name": "Bester Fenstertag"},
+      "workdays_remaining": {"name": "Verbleibende Werktage"},
+      "holidays_this_year": {"name": "Feiertage dieses Jahr"},
+      "vacation_budget": {"name": "Resturlaub"}
+    },
+    "binary_sensor": {
+      "holiday_today": {"name": "Heute Feiertag"},
+      "bridge_day_today": {"name": "Heute Fenstertag"}
+    }
+  },
+  "services": {
+    "plan_bridge_day": {
+      "name": "Fenstertag planen",
+      "description": "Markiert einen vorgeschlagenen Fenstertag-Block als geplanten Urlaub.",
+      "fields": {
+        "config_entry_id": {"name": "Eintrag", "description": "Der Fenstertage-Eintrag, für den geplant wird."},
+        "block_id": {"name": "Block-ID", "description": "Die block_id aus den Sensor-Attributen."}
+      }
+    },
+    "plan_vacation": {
+      "name": "Urlaub planen",
+      "description": "Plant einen freien Datumsbereich als Urlaub. Wochenenden und Feiertage werden automatisch ausgenommen.",
+      "fields": {
+        "config_entry_id": {"name": "Eintrag", "description": "Der Fenstertage-Eintrag, für den geplant wird."},
+        "start": {"name": "Beginn", "description": "Erster Tag des Bereichs."},
+        "end": {"name": "Ende", "description": "Letzter Tag des Bereichs."}
+      }
+    },
+    "remove_vacation": {
+      "name": "Urlaub entfernen",
+      "description": "Entfernt eine geplante Urlaubsbuchung.",
+      "fields": {
+        "config_entry_id": {"name": "Eintrag", "description": "Der Fenstertage-Eintrag."},
+        "item_id": {"name": "Eintrags-ID", "description": "Die id der geplanten Buchung."}
+      }
+    },
+    "set_budget": {
+      "name": "Budget setzen",
+      "description": "Setzt das Urlaubsbudget für ein Jahr.",
+      "fields": {
+        "config_entry_id": {"name": "Eintrag", "description": "Der Fenstertage-Eintrag."},
+        "year": {"name": "Jahr", "description": "Kalenderjahr."},
+        "days": {"name": "Tage", "description": "Verfügbare Urlaubstage in diesem Jahr."}
+      }
+    }
+  },
+  "exceptions": {
+    "update_failed": {"message": "Abruf der fenstertage.com-Daten für {year} fehlgeschlagen: {error}"},
+    "invalid_range": {"message": "Das Enddatum darf nicht vor dem Beginn liegen."},
+    "range_too_long": {"message": "Urlaubsbereiche sind auf {max_days} Tage begrenzt."},
+    "overlapping_vacation": {"message": "Der Bereich überschneidet sich mit einer bestehenden Planung ({start} – {end})."},
+    "no_vacation_days": {"message": "Der Bereich enthält keine Werktage — nichts zu planen."},
+    "unknown_item": {"message": "Keine geplante Buchung mit der id {item_id}."},
+    "unknown_block": {"message": "Kein Fenstertag-Block mit der id {block_id} in den geladenen Jahren."},
+    "unknown_entry": {"message": "Unbekannter oder nicht geladener Fenstertage-Eintrag: {entry_id}."},
+    "year_not_loaded": {"message": "Für {year} sind keine Feiertagsdaten geladen. Erhöhe die Option Vorschau-Jahre."}
+  }
+}

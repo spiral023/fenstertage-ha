@@ -17,7 +17,7 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 - [x] 3. `planner.py` — PlannerStore, Budget, Validierung
 - [x] 4. `derive.py` — pure Ableitungen + Test-Factories
 - [x] 5. `coordinator.py` + `__init__.py` + `conftest` — Mehrjahres-Fetch und Entry-Lifecycle
-- [ ] 6. `config_flow.py` + Übersetzungen
+- [x] 6. `config_flow.py` + Übersetzungen
 - [ ] 7. `entity.py` + `sensor.py` — die fünf Sensoren
 - [ ] 8. `binary_sensor.py` — `holiday_today`, `bridge_day_today`
 - [ ] 9. `services.py` + `services.yaml` — die vier Planungs-Services

@@ -6,7 +6,6 @@ from typing import Any
 from unittest.mock import AsyncMock, patch
 
 import pytest
-from homeassistant.loader import async_get_integration
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.fenstertage.api import YearMetrics
@@ -87,8 +86,6 @@ def mock_config_entry() -> MockConfigEntry:
 
 async def setup_entry(hass: Any, entry: MockConfigEntry) -> None:
     """Add and fully set up a config entry."""
-    integration = await async_get_integration(hass, DOMAIN)
-    integration.manifest["config_flow"] = False
     if hass.config_entries.async_get_entry(entry.entry_id) is None:
         entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(entry.entry_id)
