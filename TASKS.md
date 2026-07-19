@@ -31,4 +31,4 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 
 ## Zusatzaufgaben
 
-- [x] App-Icon für Fenstertage (Kalender, Brücke und Alpenraum) erstellt und visuell geprüft.
+- [x] App-Icon für Fenstertage (Kalender, Brücke und Alpenraum) mit transparentem Hintergrund erstellt und visuell geprüft.
