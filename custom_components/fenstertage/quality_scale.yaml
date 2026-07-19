@@ -1,0 +1,81 @@
+rules:
+  # --- Bronze ---
+  action-setup: done
+  appropriate-polling: done  # 12 h Default, konfigurierbar 1–48 h
+  brands: todo  # PR in home-assistant/brands separat einreichen
+  common-modules: done  # coordinator.py, entity.py
+  config-flow: done
+  config-flow-test-coverage: done
+  dependency-transparency: done  # requirements: []
+  docs-actions: done  # README + services.yaml
+  docs-high-level-description: done
+  docs-installation-instructions: done
+  docs-removal-instructions: done
+  entity-event-setup:
+    status: exempt
+    comment: Keine Event-Subscriptions — reine Coordinator-Entities.
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
+  test-before-configure: done
+  test-before-setup: done  # async_config_entry_first_refresh
+  unique-config-entry: done
+
+  # --- Silver ---
+  action-exceptions: done  # ServiceValidationError mit translation_key
+  config-entry-unloading: done
+  docs-configuration-parameters: done
+  docs-installation-parameters: done
+  entity-unavailable: done  # CoordinatorEntity-Standardverhalten
+  integration-owner: done
+  log-when-unavailable: done  # DataUpdateCoordinator-Standardverhalten
+  parallel-updates: done  # PARALLEL_UPDATES = 0
+  reauthentication-flow:
+    status: exempt
+    comment: Öffentliche API ohne Authentifizierung.
+  test-coverage: done  # fail-under=90
+
+  # --- Gold ---
+  devices: done
+  diagnostics: done
+  discovery:
+    status: exempt
+    comment: Cloud-Service, nichts zu discovern.
+  discovery-update-info:
+    status: exempt
+    comment: Kein Discovery.
+  docs-data-update: done
+  docs-examples: done
+  docs-known-limitations: done
+  docs-supported-devices:
+    status: exempt
+    comment: Keine Geräte — Cloud-Service.
+  docs-supported-functions: done
+  docs-troubleshooting: done
+  docs-use-cases: done
+  dynamic-devices:
+    status: exempt
+    comment: Ein statisches Service-Device pro Entry.
+  entity-category: done
+  entity-device-class: done
+  entity-disabled-by-default:
+    status: exempt
+    comment: Alle 7 Entities sind Kern-Funktionalität.
+  entity-translations: done
+  exception-translations: done
+  icon-translations: done
+  reconfiguration-flow:
+    status: exempt
+    comment: Land/Region bestimmen die unique_id; Wechsel = neuer Entry.
+      Alle übrigen Parameter sind Options.
+  repair-issues:
+    status: exempt
+    comment: Keine reparierbaren Fehlerzustände.
+  stale-devices:
+    status: exempt
+    comment: Ein statisches Device pro Entry, entfernt mit dem Entry.
+
+  # --- Platinum ---
+  async-dependency: done  # aiohttp
+  inject-websession: done  # async_get_clientsession → Client-Konstruktor
+  strict-typing: done  # mypy strict, py.typed
