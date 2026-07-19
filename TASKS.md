@@ -12,7 +12,7 @@ und rät ausdrücklich von `strings.json` ab. Aufgabe 6 verwendet daher
 `translations/en.json` und `translations/de.json`. Keine
 Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 
-- [ ] 1. Repo-Grundgerüst (manifest, hacs.json, const.py, Tooling)
+- [x] 1. Repo-Grundgerüst (manifest, hacs.json, const.py, Tooling)
 - [ ] 2. `api.py` — Client, Dataclasses, Exceptions, Mojibake-Fix
 - [ ] 3. `planner.py` — PlannerStore, Budget, Validierung
 - [ ] 4. `derive.py` — pure Ableitungen + Test-Factories

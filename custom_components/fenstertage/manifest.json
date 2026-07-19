@@ -1,0 +1,15 @@
+{
+  "domain": "fenstertage",
+  "name": "Fenstertage",
+  "after_dependencies": ["frontend", "http", "lovelace"],
+  "codeowners": ["@spiral023"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/spiral023/fenstertage-ha",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/spiral023/fenstertage-ha/issues",
+  "loggers": ["custom_components.fenstertage"],
+  "requirements": [],
+  "version": "0.1.0"
+}

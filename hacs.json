@@ -1,0 +1,7 @@
+{
+  "name": "Fenstertage HA",
+  "country": ["AT", "DE", "CH"],
+  "homeassistant": "2025.1.0",
+  "hacs": "2.0.0",
+  "render_readme": true
+}
