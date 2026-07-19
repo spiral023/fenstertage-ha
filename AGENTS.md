@@ -2,6 +2,9 @@
 
 Wir arbeiten die Aufgaben des Implementierungsplans schrittweise ab.
 
+Die Umsetzung erfolgt direkt auf dem Branch `main`; für Aufgaben dieses
+Repositories werden keine Git-Worktrees angelegt.
+
 Den aktuellen Fortschritt dokumentieren und aktualisieren wir in `TASKS.md`. Eine Aufgabe wird dort erst als erledigt markiert, wenn ihre Umsetzung geprüft wurde.
 
 ## Commits
