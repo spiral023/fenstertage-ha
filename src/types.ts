@@ -63,6 +63,10 @@ export interface BudgetInfo {
   remaining: number;
   total: number;
   planned: number;
+  /** Explizit überschriebene Budgets je Jahr (Schlüssel: Jahreszahl als String). */
+  budgets: Record<string, number>;
+  /** Fallback-Budget für Jahre ohne explizite Überschreibung. */
+  defaultTotal: number;
 }
 
 export type DialogState =

@@ -276,4 +276,5 @@ class PlannerStore:
             "planned_days": self.planned_days_for(year),
             "planned_items": [item.as_dict() for item in self._items],
             "budgets": budgets,
+            "default_budget": self._default_budget,
         }

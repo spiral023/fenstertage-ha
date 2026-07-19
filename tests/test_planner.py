@@ -177,6 +177,7 @@ async def test_as_attributes_shape(hass: HomeAssistant) -> None:
     assert attrs["budget_total"] == 25
     assert attrs["planned_days"] == 2
     assert attrs["budgets"] == {"2026": 25}
+    assert attrs["default_budget"] == 25
     assert len(attrs["planned_items"]) == 1
     assert attrs["planned_items"][0]["start"] == "2026-08-03"
 

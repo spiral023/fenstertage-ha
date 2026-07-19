@@ -4,7 +4,7 @@ from __future__ import annotations
 DOMAIN = "fenstertage"
 NAME = "Fenstertage"
 VERSION = "0.1.0"
-CARD_VERSION = "0.2.0"
+CARD_VERSION = "0.3.0"
 
 API_BASE_URL = "https://fenstertage.com"
 METRICS_ENDPOINT = "/api/metrics"

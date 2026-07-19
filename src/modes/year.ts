@@ -214,7 +214,7 @@ export function renderYear(
           `,
         )}
       </div>
-      ${ctx.config.show_budget ? renderBudget(ctx) : nothing}
+      ${ctx.config.show_budget ? renderBudget(ctx, year) : nothing}
     </div>
     ${card.selStart
       ? html`<div class="pick-hint">${ctx.t("pick_end")}</div>`

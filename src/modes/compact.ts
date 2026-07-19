@@ -31,7 +31,9 @@ export function renderCompact(ctx: CardCtx): TemplateResult {
           ? html`<span class="muted">✓ ${ctx.t("planned")}</span>`
           : nothing}
       </div>
-      ${ctx.config.show_budget ? renderBudget(ctx) : nothing}
+      ${ctx.config.show_budget
+        ? renderBudget(ctx, new Date().getFullYear())
+        : nothing}
     </div>
   `;
 }
