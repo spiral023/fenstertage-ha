@@ -142,4 +142,65 @@ export const cardStyles = css`
     color: var(--secondary-text-color);
     font-size: 0.9rem;
   }
+
+  /* list-Modus */
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .list-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto 20px;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: var(--primary-text-color);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background var(--fen-transition);
+  }
+  .list-row:hover {
+    background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+  }
+  .list-row.planned {
+    background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+  }
+  .list-row .when {
+    display: flex;
+    flex-direction: column;
+  }
+  .list-row .date {
+    font-weight: 600;
+  }
+  .small {
+    font-size: 0.75rem;
+  }
+  .list-row .mark {
+    color: var(--primary-color);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* compact-Modus */
+  .compact .when {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .compact .date {
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .compact .what {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
 `;
