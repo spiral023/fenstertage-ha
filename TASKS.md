@@ -27,4 +27,4 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 - [x] 13. list-Modus der Karte
 - [x] 14. year-Modus — der interaktive Jahresurlaubsplaner
 - [x] 15. CI-Workflows, Dependabot, README
-- [ ] 16. Gesamtsuite, Coverage-Gate, Abschluss-Validierung
+- [x] 16. Gesamtsuite, Coverage-Gate, Abschluss-Validierung
