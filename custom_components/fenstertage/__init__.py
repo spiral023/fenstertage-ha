@@ -3,12 +3,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.const import EVENT_HOMEASSISTANT_STARTED, Platform
+from homeassistant.core import CoreState, Event, HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.event import async_track_time_change
 
+from .card_registration import JSModuleRegistration
 from .const import CONF_VACATION_BUDGET, DEFAULT_VACATION_BUDGET, DOMAIN
 from .coordinator import (
     FenstertageConfigEntry,
@@ -24,8 +25,21 @@ PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
 
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
-    """Domain-level setup: Services einmal pro HA-Prozess registrieren."""
+    """Domain-level setup: Services + Card-Registrierung (einmal pro Prozess)."""
     async_setup_services(hass)
+
+    registration = JSModuleRegistration(hass)
+
+    async def _register_card(_event: Event | None = None) -> None:
+        await registration.async_register()
+
+    if hass.state == CoreState.running:
+        await _register_card()
+    else:
+        hass.bus.async_listen_once(
+            EVENT_HOMEASSISTANT_STARTED, _register_card
+        )
+
     return True
 
 
@@ -96,10 +110,18 @@ async def async_unload_entry(
 async def async_remove_entry(
     hass: HomeAssistant, entry: FenstertageConfigEntry
 ) -> None:
-    """Remove persisted planner data with the config entry."""
+    """Drop the planner store; unregister the card with the last entry."""
     planner = PlannerStore(
         hass,
         entry.entry_id,
         default_budget=DEFAULT_VACATION_BUDGET,
     )
     await planner.async_remove()
+
+    remaining = [
+        e
+        for e in hass.config_entries.async_entries(DOMAIN)
+        if e.entry_id != entry.entry_id
+    ]
+    if not remaining:
+        await JSModuleRegistration(hass).async_unregister()

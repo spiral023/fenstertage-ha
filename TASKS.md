@@ -22,7 +22,7 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 - [x] 8. `binary_sensor.py` — `holiday_today`, `bridge_day_today`
 - [x] 9. `services.py` + `services.yaml` — die vier Planungs-Services
 - [x] 10. `diagnostics.py` + `quality_scale.yaml`
-- [ ] 11. `card_registration.py` + Verdrahtung in `__init__.py`
+- [x] 11. `card_registration.py` + Verdrahtung in `__init__.py`
 - [ ] 12. Karten-Grundgerüst — Build-Setup, Typen, Lokalisierung, Styles, compact-Modus, Editor
 - [ ] 13. list-Modus der Karte
 - [ ] 14. year-Modus — der interaktive Jahresurlaubsplaner
