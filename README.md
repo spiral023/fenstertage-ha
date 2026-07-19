@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" alt="Fenstertage HA" width="168">
+<img src="https://raw.githubusercontent.com/spiral023/fenstertage-ha/main/docs/assets/logo.png" alt="Fenstertage HA" width="168">
 
 # Fenstertage HA
 
