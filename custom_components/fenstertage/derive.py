@@ -11,6 +11,42 @@ from typing import Any
 from .api import BridgeDayBlock, Holiday, YearMetrics
 
 
+def _block_sort_key(
+    block: BridgeDayBlock,
+) -> tuple[
+    dt.date,
+    str,
+    int,
+    dt.date,
+    dt.date,
+    tuple[dt.date, ...],
+    tuple[str, ...],
+    int,
+    int,
+    int,
+    float,
+    tuple[tuple[dt.date, str, str, tuple[str, ...]], ...],
+]:
+    """Stable canonical ordering for potentially duplicated API blocks."""
+    return (
+        block.vacation_dates[0] if block.vacation_dates else dt.date.min,
+        block.block_id,
+        block.level,
+        block.free_range_start,
+        block.free_range_end,
+        block.vacation_dates,
+        block.vacation_day_weekdays,
+        block.vacation_days,
+        block.free_days,
+        block.free_days_without_weekend,
+        block.efficiency,
+        tuple(
+            (holiday.date, holiday.local_name, holiday.name, holiday.types)
+            for holiday in block.holidays
+        ),
+    )
+
+
 def upcoming_blocks(
     years: dict[int, YearMetrics], today: dt.date
 ) -> list[BridgeDayBlock]:
@@ -21,7 +57,7 @@ def upcoming_blocks(
         for block in metrics.blocks
         if block.vacation_dates and block.vacation_dates[0] >= today
     ]
-    return sorted(blocks, key=lambda block: (block.vacation_dates[0], block.block_id))
+    return sorted(blocks, key=_block_sort_key)
 
 
 def next_block(
@@ -41,7 +77,7 @@ def best_block(
         return None
     return min(
         blocks,
-        key=lambda block: (-block.efficiency, block.vacation_dates[0], block.block_id),
+        key=lambda block: (-block.efficiency, _block_sort_key(block)),
     )
 
 
@@ -76,7 +112,7 @@ def block_covering(
         for block in metrics.blocks
         if block.free_range_start <= day <= block.free_range_end
     ]
-    return min(blocks, key=lambda block: block.block_id) if blocks else None
+    return min(blocks, key=_block_sort_key) if blocks else None
 
 
 def holidays_in_years(years: dict[int, YearMetrics]) -> set[dt.date]:

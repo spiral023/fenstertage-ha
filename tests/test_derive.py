@@ -74,6 +74,37 @@ def test_block_helpers_use_canonical_order_for_equal_blocks() -> None:
         assert best_block(years, D(2026, 1, 1)) == first
 
 
+def test_block_helpers_order_colliding_block_ids_deterministically() -> None:
+    first = make_block(
+        "2026-05-15",
+        level=1,
+        free_range=("2026-05-01", "2026-05-31"),
+    )
+    second = make_block(
+        "2026-05-15",
+        level=2,
+        free_range=("2026-05-10", "2026-05-20"),
+    )
+    assert first.block_id == second.block_id
+    forward = {
+        2026: make_metrics(2026, blocks=(second, first)),
+        2027: make_metrics(2027),
+    }
+    reversed_order = {
+        2027: make_metrics(2027),
+        2026: make_metrics(2026, blocks=(first, second)),
+    }
+
+    for years in (forward, reversed_order):
+        assert [block.level for block in upcoming_blocks(years, D(2026, 1, 1))] == [
+            first.level,
+            second.level,
+        ]
+        assert next_block(years, D(2026, 1, 1)) == first
+        assert best_block(years, D(2026, 1, 1)) == first
+        assert block_covering(years, D(2026, 5, 15)) == first
+
+
 def test_next_block_and_empty() -> None:
     assert next_block(_years(), D(2026, 5, 1)).block_id == "2026-05-15_1d"
     assert next_block({}, D(2026, 5, 1)) is None
