@@ -19,7 +19,7 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 - [x] 5. `coordinator.py` + `__init__.py` + `conftest` — Mehrjahres-Fetch und Entry-Lifecycle
 - [x] 6. `config_flow.py` + Übersetzungen
 - [x] 7. `entity.py` + `sensor.py` — die fünf Sensoren
-- [ ] 8. `binary_sensor.py` — `holiday_today`, `bridge_day_today`
+- [x] 8. `binary_sensor.py` — `holiday_today`, `bridge_day_today`
 - [ ] 9. `services.py` + `services.yaml` — die vier Planungs-Services
 - [ ] 10. `diagnostics.py` + `quality_scale.yaml`
 - [ ] 11. `card_registration.py` + Verdrahtung in `__init__.py`
