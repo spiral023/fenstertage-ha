@@ -26,5 +26,5 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 - [x] 12. Karten-Grundgerüst — Build-Setup, Typen, Lokalisierung, Styles, compact-Modus, Editor
 - [x] 13. list-Modus der Karte
 - [x] 14. year-Modus — der interaktive Jahresurlaubsplaner
-- [ ] 15. CI-Workflows, Dependabot, README
+- [x] 15. CI-Workflows, Dependabot, README
 - [ ] 16. Gesamtsuite, Coverage-Gate, Abschluss-Validierung
