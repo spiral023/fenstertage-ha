@@ -19,9 +19,9 @@ def upcoming_blocks(
         block
         for metrics in years.values()
         for block in metrics.blocks
-        if block.vacation_dates[0] >= today
+        if block.vacation_dates and block.vacation_dates[0] >= today
     ]
-    return sorted(blocks, key=lambda block: block.vacation_dates[0])
+    return sorted(blocks, key=lambda block: (block.vacation_dates[0], block.block_id))
 
 
 def next_block(
@@ -39,9 +39,9 @@ def best_block(
     blocks = upcoming_blocks(years, today)
     if not blocks:
         return None
-    return max(
+    return min(
         blocks,
-        key=lambda block: (block.efficiency, -block.vacation_dates[0].toordinal()),
+        key=lambda block: (-block.efficiency, block.vacation_dates[0], block.block_id),
     )
 
 
@@ -70,11 +70,13 @@ def block_covering(
     years: dict[int, YearMetrics], day: dt.date
 ) -> BridgeDayBlock | None:
     """The block whose free range contains `day`, or None."""
-    for metrics in years.values():
-        for block in metrics.blocks:
-            if block.free_range_start <= day <= block.free_range_end:
-                return block
-    return None
+    blocks = [
+        block
+        for metrics in years.values()
+        for block in metrics.blocks
+        if block.free_range_start <= day <= block.free_range_end
+    ]
+    return min(blocks, key=lambda block: block.block_id) if blocks else None
 
 
 def holidays_in_years(years: dict[int, YearMetrics]) -> set[dt.date]:
