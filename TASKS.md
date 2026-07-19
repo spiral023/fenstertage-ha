@@ -16,7 +16,7 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 - [x] 2. `api.py` — Client, Dataclasses, Exceptions, Mojibake-Fix
 - [x] 3. `planner.py` — PlannerStore, Budget, Validierung
 - [x] 4. `derive.py` — pure Ableitungen + Test-Factories
-- [ ] 5. `coordinator.py` + `__init__.py` + `conftest` — Mehrjahres-Fetch und Entry-Lifecycle
+- [x] 5. `coordinator.py` + `__init__.py` + `conftest` — Mehrjahres-Fetch und Entry-Lifecycle
 - [ ] 6. `config_flow.py` + Übersetzungen
 - [ ] 7. `entity.py` + `sensor.py` — die fünf Sensoren
 - [ ] 8. `binary_sensor.py` — `holiday_today`, `bridge_day_today`
