@@ -32,7 +32,7 @@
     }
   },
   "selector": {
-    "country": {"options": {"AT": "Österreich", "DE": "Deutschland", "CH": "Schweiz"}},
+    "country": {"options": {"at": "Österreich", "de": "Deutschland", "ch": "Schweiz"}},
     "subdivision": {"options": {"nationwide": "Landesweit (kein Regionsfilter)"}}
   },
   "entity": {
