@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import datetime as dt
 import logging
+import math
 from dataclasses import dataclass
 from typing import Any
 
@@ -69,7 +70,20 @@ def _parse_date(raw: Any) -> dt.date:
 def _require_int(raw: Any, field: str) -> int:
     if isinstance(raw, bool) or not isinstance(raw, (int, float)):
         raise FenstertageDataError(f"field {field} is not a number: {raw!r}")
+    if isinstance(raw, float) and (
+        not math.isfinite(raw) or not raw.is_integer()
+    ):
+        raise FenstertageDataError(f"field {field} is not an integer: {raw!r}")
     return int(raw)
+
+
+def _require_float(raw: Any, field: str) -> float:
+    if isinstance(raw, bool) or not isinstance(raw, (int, float)):
+        raise FenstertageDataError(f"field {field} is not a number: {raw!r}")
+    value = float(raw)
+    if not math.isfinite(value):
+        raise FenstertageDataError(f"field {field} is not finite: {raw!r}")
+    return value
 
 
 @dataclass(frozen=True)
@@ -168,7 +182,7 @@ def _parse_block(raw: Any) -> BridgeDayBlock | None:
         free_days_without_weekend=_require_int(
             raw.get("freeDaysWithoutWeekend", 0), "freeDaysWithoutWeekend"
         ),
-        efficiency=float(raw.get("efficiency") or 0.0),
+        efficiency=_require_float(raw.get("efficiency", 0.0), "efficiency"),
         free_range_start=_parse_date(raw.get("freeRangeStart")),
         free_range_end=_parse_date(raw.get("freeRangeEnd")),
         holidays=tuple(_parse_holiday(h) for h in holidays_raw),
@@ -198,7 +212,9 @@ def _parse_levels(raw: Any) -> dict[int, LevelSummary]:
                 value.get("freeDaysWithoutWeekend", 0),
                 "freeDaysWithoutWeekend",
             ),
-            average_efficiency=float(value.get("averageEfficiency") or 0.0),
+            average_efficiency=_require_float(
+                value.get("averageEfficiency", 0.0), "averageEfficiency"
+            ),
         )
     return out
 
@@ -206,7 +222,7 @@ def _parse_levels(raw: Any) -> dict[int, LevelSummary]:
 def parse_metrics(payload: dict[str, Any]) -> YearMetrics:
     """Parse a full /api/metrics payload into typed dataclasses."""
     year_raw = payload.get("year")
-    if not isinstance(year_raw, int):
+    if isinstance(year_raw, bool) or not isinstance(year_raw, int):
         raise FenstertageDataError(f"missing/invalid year: {year_raw!r}")
     holidays_raw = payload.get("holidays") or []
     if not isinstance(holidays_raw, list):

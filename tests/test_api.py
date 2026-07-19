@@ -15,6 +15,7 @@ from custom_components.fenstertage.api import (
     _fix_mojibake,
     parse_metrics,
 )
+from custom_components.fenstertage.const import USER_AGENT
 
 
 # Kompaktes, strukturtreues Abbild der echten /api/metrics-Antwort
@@ -149,6 +150,33 @@ def test_parse_metrics_rejects_missing_year() -> None:
         parse_metrics(bad)
 
 
+@pytest.mark.parametrize("value", [True, 2026.5, float("nan"), float("inf")])
+def test_parse_metrics_rejects_invalid_year_numbers(value: object) -> None:
+    with pytest.raises(FenstertageDataError):
+        parse_metrics({**PAYLOAD, "year": value})
+
+
+@pytest.mark.parametrize("value", [True, 251.5, float("nan"), float("inf")])
+def test_parse_metrics_rejects_invalid_integral_values(value: object) -> None:
+    with pytest.raises(FenstertageDataError):
+        parse_metrics({**PAYLOAD, "workdays": value})
+
+
+@pytest.mark.parametrize("value", ["not-a-number", None, float("nan"), float("inf")])
+def test_parse_metrics_rejects_invalid_block_efficiency(value: object) -> None:
+    block = {**PAYLOAD["bridgeDayBlocks"][0], "efficiency": value}
+    with pytest.raises(FenstertageDataError):
+        parse_metrics({**PAYLOAD, "bridgeDayBlocks": [block]})
+
+
+@pytest.mark.parametrize("value", ["not-a-number", None, float("nan"), float("inf")])
+def test_parse_metrics_rejects_invalid_average_efficiency(value: object) -> None:
+    level = {**PAYLOAD["bridgeDaysByLevel"]["level1"], "averageEfficiency": value}
+    levels = {**PAYLOAD["bridgeDaysByLevel"], "level1": level}
+    with pytest.raises(FenstertageDataError):
+        parse_metrics({**PAYLOAD, "bridgeDaysByLevel": levels})
+
+
 def test_parse_metrics_rejects_bad_date() -> None:
     bad = {**PAYLOAD, "holidays": [{"date": "not-a-date", "localName": "x"}]}
     with pytest.raises(FenstertageDataError):
@@ -214,12 +242,14 @@ class _FakeSession:
         self._exc = exc
         self.last_url: str | None = None
         self.last_params: dict[str, str] | None = None
+        self.last_kwargs: dict[str, Any] | None = None
 
     def get(self, url: str, **kwargs: Any) -> _FakeResponse:
         if self._exc is not None:
             raise self._exc
         self.last_url = url
         self.last_params = kwargs.get("params")
+        self.last_kwargs = kwargs
         assert self._response is not None
         return self._response
 
@@ -238,6 +268,14 @@ async def test_client_happy_path_builds_params() -> None:
         "maxLevel": "3",
         "subdivision": "DE-BY",
     }
+    assert session.last_kwargs is not None
+    assert session.last_kwargs["headers"] == {
+        "User-Agent": USER_AGENT,
+        "Accept": "application/json",
+    }
+    timeout = session.last_kwargs["timeout"]
+    assert isinstance(timeout, aiohttp.ClientTimeout)
+    assert timeout.total == 30
 
 
 async def test_client_omits_subdivision_when_none() -> None:
