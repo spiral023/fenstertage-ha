@@ -14,7 +14,7 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 
 - [x] 1. Repo-Grundgerüst (manifest, hacs.json, const.py, Tooling)
 - [x] 2. `api.py` — Client, Dataclasses, Exceptions, Mojibake-Fix
-- [ ] 3. `planner.py` — PlannerStore, Budget, Validierung
+- [x] 3. `planner.py` — PlannerStore, Budget, Validierung
 - [ ] 4. `derive.py` — pure Ableitungen + Test-Factories
 - [ ] 5. `coordinator.py` + `__init__.py` + `conftest` — Mehrjahres-Fetch und Entry-Lifecycle
 - [ ] 6. `config_flow.py` + Übersetzungen
