@@ -19,8 +19,8 @@ from .planner import PlannerStore
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
-# Tasks 7 and 8 add SENSOR and BINARY_SENSOR, respectively.
-PLATFORMS: list[Platform] = []
+# Task 8 adds BINARY_SENSOR.
+PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:

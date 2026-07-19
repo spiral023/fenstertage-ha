@@ -1,0 +1,21 @@
+{
+  "entity": {
+    "sensor": {
+      "next_bridge_day": { "default": "mdi:calendar-star" },
+      "best_bridge_day": { "default": "mdi:calendar-heart" },
+      "workdays_remaining": { "default": "mdi:briefcase-outline" },
+      "holidays_this_year": { "default": "mdi:calendar-multiple" },
+      "vacation_budget": { "default": "mdi:beach" }
+    },
+    "binary_sensor": {
+      "holiday_today": { "default": "mdi:party-popper" },
+      "bridge_day_today": { "default": "mdi:calendar-today" }
+    }
+  },
+  "services": {
+    "plan_bridge_day": { "service": "mdi:calendar-plus" },
+    "plan_vacation": { "service": "mdi:calendar-plus" },
+    "remove_vacation": { "service": "mdi:calendar-remove" },
+    "set_budget": { "service": "mdi:counter" }
+  }
+}
