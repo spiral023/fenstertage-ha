@@ -18,7 +18,7 @@
 - Poll-Default 12 h, Options-Minimum 1 h, Maximum 48 h.
 - Python-Zielversion 3.14 (`[tool.ruff] target-version = "py314"`), mypy `strict = true`.
 - Coverage-Gate: `--cov --cov-fail-under=90` (pytest.ini). TDD: Test zuerst, dann Implementierung, in jedem Task.
-- Alle User-sichtbaren Strings über `strings.json` + `translations/{en,de}.json`; Exceptions mit `translation_domain=DOMAIN` + `translation_key`.
+- Alle User-sichtbaren Strings vollständig über `translations/{en,de}.json`; `strings.json` wird für Custom Integrations nicht verwendet. Exceptions mit `translation_domain=DOMAIN` + `translation_key`.
 - `unique_id`-Formate sind stabil zu halten: Entry `f"{country}_{subdivision or 'none'}"`, Entities `f"{entry.entry_id}_{key}"`.
 - Karte: ein gebundeltes ES-Modul `custom_components/fenstertage/www/fenstertage-card.js`, Rollup, `inlineDynamicImports: true`. `CARD_VERSION` in `const.py` und `src/const.ts` synchron halten.
 - Commit nach jedem grünen Task (`git commit`), Conventional-Commit-Präfixe (`feat:`, `test:`, `chore:`, `docs:`, `ci:`).
@@ -42,7 +42,7 @@ custom_components/fenstertage/
 ├── sensor.py              # 5 Sensoren
 ├── services.py            # 4 Services
 ├── services.yaml
-├── icons.json, strings.json, translations/{en,de}.json
+├── icons.json, translations/{en,de}.json
 ├── manifest.json, quality_scale.yaml, py.typed
 └── www/fenstertage-card.js   # Build-Artefakt (eingecheckt)
 src/                        # Karten-Quellcode
@@ -2274,11 +2274,10 @@ git commit -m "feat: Coordinator mit Mehrjahres-Fetch und Entry-Lifecycle"
 
 ---
 
-### Task 6: config_flow.py + strings.json + translations
+### Task 6: config_flow.py + Übersetzungen
 
 **Files:**
 - Create: `custom_components/fenstertage/config_flow.py`
-- Create: `custom_components/fenstertage/strings.json`
 - Create: `custom_components/fenstertage/translations/en.json`, `custom_components/fenstertage/translations/de.json`
 - Modify: `custom_components/fenstertage/const.py` (eine Konstante ergänzen)
 - Test: `tests/test_config_flow.py`
@@ -2736,9 +2735,9 @@ class FenstertageOptionsFlow(OptionsFlow):
         )
 ```
 
-- [ ] **Step 5: strings.json + translations schreiben**
+- [ ] **Step 5: Übersetzungen schreiben**
 
-`custom_components/fenstertage/strings.json` (Englisch = Quelle):
+`custom_components/fenstertage/translations/en.json` (vollständige englische Quelle):
 
 ```json
 {
@@ -2876,8 +2875,6 @@ class FenstertageOptionsFlow(OptionsFlow):
   }
 }
 ```
-
-`custom_components/fenstertage/translations/en.json`: exakte Kopie von `strings.json`.
 
 `custom_components/fenstertage/translations/de.json`: gleiche Struktur, deutsche Texte:
 
@@ -3026,7 +3023,7 @@ Expected: alle Tests PASS.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add custom_components/fenstertage/config_flow.py custom_components/fenstertage/strings.json custom_components/fenstertage/translations custom_components/fenstertage/const.py tests/test_config_flow.py
+git add custom_components/fenstertage/config_flow.py custom_components/fenstertage/translations custom_components/fenstertage/const.py tests/test_config_flow.py
 git commit -m "feat: Config- und Options-Flow mit Live-Validierung und Übersetzungen"
 ```
 

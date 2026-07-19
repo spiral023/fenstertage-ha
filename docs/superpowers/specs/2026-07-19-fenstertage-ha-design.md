@@ -60,7 +60,7 @@ fenstertage-ha/
 │   ├── sensor.py            # 5 Sensoren
 │   ├── binary_sensor.py     # 2 Binary-Sensoren
 │   ├── diagnostics.py
-│   ├── icons.json, strings.json, translations/{en,de}.json
+│   ├── icons.json, translations/{en,de}.json
 │   ├── services.yaml
 │   ├── manifest.json, quality_scale.yaml, py.typed
 │   └── www/fenstertage-card.js   # Rollup-Build-Artefakt
