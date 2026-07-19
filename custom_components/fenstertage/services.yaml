@@ -1,0 +1,66 @@
+plan_bridge_day:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: fenstertage
+    block_id:
+      required: true
+      example: "2026-05-15_1d"
+      selector:
+        text:
+
+plan_vacation:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: fenstertage
+    start:
+      required: true
+      example: "2026-08-03"
+      selector:
+        date:
+    end:
+      required: true
+      example: "2026-08-14"
+      selector:
+        date:
+
+remove_vacation:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: fenstertage
+    item_id:
+      required: true
+      selector:
+        text:
+
+set_budget:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: fenstertage
+    year:
+      required: true
+      example: 2026
+      selector:
+        number:
+          min: 1970
+          max: 2100
+          mode: box
+    days:
+      required: true
+      example: 25
+      selector:
+        number:
+          min: 0
+          max: 100
+          mode: box

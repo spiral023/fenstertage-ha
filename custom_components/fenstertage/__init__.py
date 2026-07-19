@@ -16,6 +16,7 @@ from .coordinator import (
     FenstertageRuntimeData,
 )
 from .planner import PlannerStore
+from .services import async_setup_services
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
@@ -23,7 +24,8 @@ PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
 
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
-    """Set up the integration domain."""
+    """Domain-level setup: Services einmal pro HA-Prozess registrieren."""
+    async_setup_services(hass)
     return True
 
 
