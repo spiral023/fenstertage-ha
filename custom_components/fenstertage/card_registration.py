@@ -26,9 +26,13 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
-from homeassistant.components.http import StaticPathConfig
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant
 from homeassistant.helpers.event import async_call_later
+
+if TYPE_CHECKING:
+    from homeassistant.components.http.server import StaticPathConfig
+else:
+    from homeassistant.components.http import StaticPathConfig
 
 from .const import CARD_VERSION
 

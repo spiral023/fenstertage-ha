@@ -7,12 +7,18 @@ the exact same write path.
 from __future__ import annotations
 
 import datetime as dt
+from typing import TYPE_CHECKING
 
-import voluptuous as vol
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv
+
+if TYPE_CHECKING:
+    # Keep the legacy runtime import compatible with older HA releases.
+    import probatio as vol
+else:
+    import voluptuous as vol
 
 from .const import (
     ATTR_BLOCK_ID,

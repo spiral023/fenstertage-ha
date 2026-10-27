@@ -2,9 +2,8 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import voluptuous as vol
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
@@ -23,6 +22,12 @@ from homeassistant.helpers.selector import (
     SelectSelectorMode,
 )
 from homeassistant.util import dt as dt_util
+
+if TYPE_CHECKING:
+    # HA aliases Voluptuous to Probatio at runtime; use its real schema types.
+    import probatio as vol
+else:
+    import voluptuous as vol
 
 from .api import (
     FenstertageApiClient,
