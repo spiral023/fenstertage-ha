@@ -48,6 +48,15 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
   @rollup/plugin-typescript (`ScriptTarget.ES2015` fehlt), auch mit Plugin 12.3.0.
   Auf Philipps Entscheidung bleibt TypeScript 6; Version 7 wird vorerst von
   Dependabot ausgenommen.
-- [ ] Die acht übrigen Dependabot-PRs nach frischen Prüfungen übernehmen.
+- [ ] Die verbleibenden Python-/Actions-PRs nach frischen Prüfungen übernehmen.
 - [ ] TypeScript 7 erneut bewerten, sobald der Rollup-TypeScript-Adapter die
   neue Compiler-API unterstützt; keine Abschaltung von Build-/Typprüfungen.
+
+- [x] Gekoppelte Karten-Build-Updates zusammen geprüft: Rollup 4.65.1,
+  TypeScript-Plugin 12.3.1, Terser-Plugin 1.0.2; TypeScript bleibt 6.0.3.
+  serialize-javascript innerhalb seines bestehenden Bereichs auf einen
+  gepatchten Stand gebracht; vollständiger npm-Audit ohne bekannte Befunde.
+  Karten-Bundle neu erzeugt, Integration-/Karten-Version 0.3.1 vorbereitet;
+  98 Tests, Ruff und mypy erneut grün. PRs #41/#43/#44 sind damit inhaltlich
+  übernommen; GitHub-Abnahme folgt vor Veröffentlichung.
+- [ ] Patchrelease 0.3.1 nach grüner finaler GitHub-CI veröffentlichen.
