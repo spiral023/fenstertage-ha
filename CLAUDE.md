@@ -1,1 +1,0 @@
-Lies die AGENTS.md
