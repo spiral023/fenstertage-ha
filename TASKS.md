@@ -48,7 +48,9 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
   @rollup/plugin-typescript (`ScriptTarget.ES2015` fehlt), auch mit Plugin 12.3.0.
   Auf Philipps Entscheidung bleibt TypeScript 6; Version 7 wird vorerst von
   Dependabot ausgenommen.
-- [ ] Die verbleibenden Python-/Actions-PRs nach frischen Prüfungen übernehmen.
+- [x] Die Python-/Actions-PRs #2, #3, #6, #8, #39, #42 und #45 nach frischen
+  Prüfungen übernommen. Konflikte durch benachbarte Versionszeilen aufgelöst
+  und die betroffenen PRs erneut vollständig geprüft.
 - [ ] TypeScript 7 erneut bewerten, sobald der Rollup-TypeScript-Adapter die
   neue Compiler-API unterstützt; keine Abschaltung von Build-/Typprüfungen.
 
@@ -58,5 +60,9 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
   gepatchten Stand gebracht; vollständiger npm-Audit ohne bekannte Befunde.
   Karten-Bundle neu erzeugt, Integration-/Karten-Version 0.3.1 vorbereitet;
   98 Tests, Ruff und mypy erneut grün. PRs #41/#43/#44 sind damit inhaltlich
-  übernommen; GitHub-Abnahme folgt vor Veröffentlichung.
-- [ ] Patchrelease 0.3.1 nach grüner finaler GitHub-CI veröffentlichen.
+  übernommen und von Dependabot geschlossen; GitHub-Prüfungen bestanden.
+- [x] Patchrelease 0.3.1 nach grüner finaler GitHub-CI veröffentlicht:
+  Tag und Release zeigen auf `9f8efad64b24fac9ae79252620c2e56cea912b23`.
+  Alle vier Jobs (Hassfest, HACS, Python-Qualität/98 Tests, Karten-Build ohne
+  Drift) erfolgreich. Die sechs Renovate-Repos haben ebenfalls keine offenen
+  PRs (Kontrolle am 2026-10-27). Keine Änderung an der laufenden HA-Installation.
