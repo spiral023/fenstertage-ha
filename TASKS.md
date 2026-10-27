@@ -32,3 +32,22 @@ Implementierungsaufgabe wurde durch diese Recherche als erledigt markiert.
 ## Zusatzaufgaben
 
 - [x] App-Icon für Fenstertage (Kalender, Brücke und Alpenraum) mit transparentem Hintergrund erstellt und visuell geprüft.
+
+## Wartung — 2026-10-27
+
+- [x] Fehler auf unverändertem main frisch nachgestellt: veralteter Geräte-Lookup,
+  1 fehlgeschlagener / 97 bestandene Tests. Bestehenden Lifecycle-Test auf den
+  Config-Entry-bezogenen Lookup umgestellt; alle 98 Tests unter HA 2026.10.4
+  bestanden, Coverage 94,67 %.
+- [x] Ruff-Befunde in Test-Typen/Imports und überholte Noqa-Hinweise bereinigt.
+  mypy prüft die tatsächlichen Probatio-Typen des aktuellen HA-Shims; die
+  Voluptuous-Runtime-Imports für ältere HA-Versionen bleiben erhalten. Ruff und
+  mypy sind nun auch Teil der CI. Doppelte Push-/PR-Läufe derselben Änderung
+  vermieden und Pip-Cache aktiviert.
+- [x] TypeScript-7-PR #4 untersucht: reproduzierbarer Build-Abbruch in
+  @rollup/plugin-typescript (`ScriptTarget.ES2015` fehlt), auch mit Plugin 12.3.0.
+  Auf Philipps Entscheidung bleibt TypeScript 6; Version 7 wird vorerst von
+  Dependabot ausgenommen.
+- [ ] Die acht übrigen Dependabot-PRs nach frischen Prüfungen übernehmen.
+- [ ] TypeScript 7 erneut bewerten, sobald der Rollup-TypeScript-Adapter die
+  neue Compiler-API unterstützt; keine Abschaltung von Build-/Typprüfungen.
