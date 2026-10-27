@@ -43,8 +43,8 @@ async def test_device_created(
     freezer.move_to("2026-07-19")
     await setup_entry(hass, mock_config_entry)
 
-    device = dr.async_get(hass).async_get_device(
-        identifiers={(DOMAIN, mock_config_entry.entry_id)}
+    device = dr.async_get(hass).async_get_device_by_identifier(
+        (DOMAIN, mock_config_entry.entry_id), mock_config_entry.entry_id
     )
     assert device is not None
     assert device.manufacturer == "fenstertage.com"

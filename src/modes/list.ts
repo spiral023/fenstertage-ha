@@ -42,6 +42,8 @@ export function renderList(
         `;
       })}
     </div>
-    ${ctx.config.show_budget ? renderBudget(ctx) : nothing}
+    ${ctx.config.show_budget
+      ? renderBudget(ctx, new Date().getFullYear())
+      : nothing}
   `;
 }

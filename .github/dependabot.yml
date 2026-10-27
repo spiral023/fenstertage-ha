@@ -8,6 +8,11 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # TypeScript 7 currently breaks @rollup/plugin-typescript's compiler API.
+      # Revisit after the upstream plugin supports it; TypeScript 6 stays active.
+      - dependency-name: typescript
+        versions: [">=7.0.0 <8.0.0"]
   - package-ecosystem: github-actions
     directory: /
     schedule:

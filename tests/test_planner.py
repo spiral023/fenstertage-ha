@@ -177,6 +177,7 @@ async def test_as_attributes_shape(hass: HomeAssistant) -> None:
     assert attrs["budget_total"] == 25
     assert attrs["planned_days"] == 2
     assert attrs["budgets"] == {"2026": 25}
+    assert attrs["default_budget"] == 25
     assert len(attrs["planned_items"]) == 1
     assert attrs["planned_items"][0]["start"] == "2026-08-03"
 
@@ -184,7 +185,7 @@ async def test_as_attributes_shape(hass: HomeAssistant) -> None:
 async def test_load_ignores_malformed_entries(hass: HomeAssistant) -> None:
     store = PlannerStore(hass, "entry9", default_budget=25)
     # Direkt kaputte Daten in den Store schreiben:
-    await store._store.async_save(  # noqa: SLF001 — gezielter Whitebox-Test
+    await store._store.async_save(  # gezielter Whitebox-Test
         {
             "budgets": {"2026": 30, "kaputt": "x"},
             "items": [
@@ -247,7 +248,7 @@ async def test_load_skips_items_with_invalid_source_or_block_id(
     hass: HomeAssistant,
 ) -> None:
     store = PlannerStore(hass, "entry_invalid_items", default_budget=25)
-    await store._store.async_save(  # noqa: SLF001 — gezielter Whitebox-Test
+    await store._store.async_save(  # gezielter Whitebox-Test
         {
             "budgets": {},
             "items": [
@@ -298,7 +299,7 @@ async def test_load_skips_structurally_invalid_items(hass: HomeAssistant) -> Non
         "block_id": None,
         "created_at": "",
     }
-    await store._store.async_save(  # noqa: SLF001 — gezielter Whitebox-Test
+    await store._store.async_save(  # gezielter Whitebox-Test
         {
             "budgets": {},
             "items": [

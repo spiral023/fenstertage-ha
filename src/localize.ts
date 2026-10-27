@@ -23,6 +23,9 @@ const STRINGS: Record<string, Record<string, string>> = {
     today: "today",
     date_range: "Free range",
     year: "Year",
+    bridge_day: "Bridge day",
+    vacation: "Vacation",
+    weekend: "Weekend",
   },
   de: {
     next_bridge_day: "Nächster Fenstertag",
@@ -47,6 +50,9 @@ const STRINGS: Record<string, Record<string, string>> = {
     today: "heute",
     date_range: "Freier Zeitraum",
     year: "Jahr",
+    bridge_day: "Fenstertag",
+    vacation: "Urlaub",
+    weekend: "Wochenende",
   },
 };
 
