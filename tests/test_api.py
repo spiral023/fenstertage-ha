@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import datetime as dt
-from typing import Any
+from typing import Any, Self
 
 import aiohttp
 import pytest
@@ -16,7 +16,6 @@ from custom_components.fenstertage.api import (
     parse_metrics,
 )
 from custom_components.fenstertage.const import USER_AGENT
-
 
 # Kompaktes, strukturtreues Abbild der echten /api/metrics-Antwort
 # (AT 2026, verifiziert am 2026-07-19). Ein Feiertag absichtlich mit
@@ -209,7 +208,7 @@ class _FakeResponse:
         self._json_data = json_data
         self._json_exc = json_exc
 
-    async def __aenter__(self) -> "_FakeResponse":
+    async def __aenter__(self) -> Self:
         return self
 
     async def __aexit__(self, *exc_info: object) -> None:

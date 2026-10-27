@@ -4,6 +4,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { CARD_TAG, CARD_VERSION, DOMAIN, EDITOR_TAG } from "./const";
 import { makeLocalize } from "./localize";
 import { renderCompact } from "./modes/compact";
+import { formatDateNumeric } from "./shared";
 import { cardStyles } from "./styles";
 import type {
   BlockData,
@@ -127,10 +128,14 @@ export class FenstertageCard extends LitElement {
     if (budgetEntity) {
       planned = (budgetEntity.attributes["planned_items"] ??
         []) as PlannedItemData[];
+      const budgetsRaw = (budgetEntity.attributes["budgets"] ??
+        {}) as Record<string, number>;
       budget = {
         remaining: Number(budgetEntity.state),
         total: Number(budgetEntity.attributes["budget_total"]),
         planned: Number(budgetEntity.attributes["planned_days"]),
+        budgets: budgetsRaw,
+        defaultTotal: Number(budgetEntity.attributes["default_budget"]),
       };
     }
     return {
@@ -257,7 +262,8 @@ export class FenstertageCard extends LitElement {
             <div class="row">
               <span class="muted">${ctx.t("date_range")}</span>
               <span class="num"
-                >${b.free_range_start} – ${b.free_range_end}</span
+                >${formatDateNumeric(ctx, b.free_range_start)} –
+                ${formatDateNumeric(ctx, b.free_range_end)}</span
               >
             </div>
             <div class="row">
@@ -298,7 +304,10 @@ export class FenstertageCard extends LitElement {
             <h3>${ctx.t("planned")}</h3>
             <div class="row">
               <span class="muted">${ctx.t("date_range")}</span>
-              <span class="num">${item.start} – ${item.end}</span>
+              <span class="num"
+                >${formatDateNumeric(ctx, item.start)} –
+                ${formatDateNumeric(ctx, item.end)}</span
+              >
             </div>
             <div class="row">
               <span class="muted">${ctx.t("range_estimate")}</span>
@@ -326,7 +335,10 @@ export class FenstertageCard extends LitElement {
           <h3>${ctx.t("plan")}</h3>
           <div class="row">
             <span class="muted">${ctx.t("date_range")}</span>
-            <span class="num">${dialog.start} – ${dialog.end}</span>
+            <span class="num"
+              >${formatDateNumeric(ctx, dialog.start)} –
+              ${formatDateNumeric(ctx, dialog.end)}</span
+            >
           </div>
           <div class="actions">
             <button class="fen ghost" @click=${() => this.closeDialog()}>
